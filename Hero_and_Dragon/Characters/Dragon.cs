@@ -36,7 +36,7 @@ namespace Hero_and_Dragon.Characters
             //patch negative numbers 
             if (damage > defense)
                 enemy.Health -= damage - defense;
-            
+
             return (damage, defense);
         }
 

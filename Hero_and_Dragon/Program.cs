@@ -20,24 +20,24 @@ namespace Hero_and_Dragon
                 Console.WriteLine("--------------------");
 
                 (int damage, int enemyDefense) = hero.Attack(dragon);
-                
+
                 Console.WriteLine(hero.Name + " attack: " + damage);
-                Console.WriteLine(dragon.Name +" defend: " + enemyDefense); 
-                
-                Console.WriteLine(dragon.Name+ " health: " + dragon.Health);
+                Console.WriteLine(dragon.Name + " defend: " + enemyDefense);
+
+                Console.WriteLine(dragon.Name + " health: " + dragon.Health);
                 if (!dragon.IsAlive())
                     break;
-                
+
                 Console.WriteLine();
                 (damage, enemyDefense) = dragon.Attack(hero);
-                
+
                 Console.WriteLine(dragon.Name + " attack: " + damage);
                 Console.WriteLine(hero.Name + " defend: " + enemyDefense);
-                
-                Console.WriteLine(hero.Name+ " health: " + hero.Health);
+
+                Console.WriteLine(hero.Name + " health: " + hero.Health);
                 if (!hero.IsAlive())
                     break;
-            } 
+            }
 
             if (hero.IsAlive())
             {
