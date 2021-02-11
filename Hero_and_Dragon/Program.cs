@@ -9,22 +9,34 @@ namespace Hero_and_Dragon
         static void Main(string[] args)
         {
             /*fight in loop while one death*/
-            Hero hero = new Hero(name: "Legolas", 500, 50, 40);
+            Hero hero = new Hero(name: "Legolas", 500, 35, 40);
             Dragon dragon = new Dragon(name: "Parthumanax", 500, 35, 50);
 
 
-            while (hero.IsAlive() && dragon.IsAlive())
+            for (int i = 1; true ; i++)
             {
-                var heroAttack = hero.Attack(dragon);
-                Console.WriteLine($"Hero attack was {heroAttack.damage} because dragon defended with {heroAttack.defense}");
+                Console.WriteLine("---------------");
+                Console.WriteLine("Round: " + i);
+                Console.WriteLine("---------------");
+
+                (int damage, int enemyDefense) = hero.Attack(dragon);
                 
-                var dragonAttack = dragon.Attack(hero);
-                Console.WriteLine($"Dragon attack was {dragonAttack.damage} because hero defended with {dragonAttack.defense}");
+                Console.WriteLine(hero.Name + " attack: " + damage);
+                Console.WriteLine(dragon.Name +" defend: " + enemyDefense); 
                 
-                Console.WriteLine("Hero health is " + hero.Health);
-                Console.WriteLine("Dragon health is " + dragon.Health);
+                Console.WriteLine(dragon.Name+ " health: " + dragon.Health);
+                if (!dragon.IsAlive())
+                    break;
                 
                 Console.WriteLine();
+                (damage, enemyDefense) = dragon.Attack(hero);
+                
+                Console.WriteLine(dragon.Name + " attack: " + damage);
+                Console.WriteLine(hero.Name + " defend: " + enemyDefense);
+                
+                Console.WriteLine(hero.Name+ " health: " + hero.Health);
+                if (!hero.IsAlive())
+                    break;
             } 
 
             if (hero.IsAlive())

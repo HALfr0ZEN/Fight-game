@@ -26,20 +26,17 @@ namespace Hero_and_Dragon.Characters
         }
         
         /*Character attack*/
-        public (int damage, int defense) Attack(Dragon enemy)
+        public (int damage, int enemyDefense) Attack(Dragon enemy)
         {
             int defense = enemy.Defense();
-            int damage;
-            int reload = 0;
-            do
-            {
-                /*reload if damage < 0 3* than define damage as zero*/
-                damage = reload <= 3 ? Convert.ToInt32(_generating.NextDouble() * MaxDamage) - defense : 0;
-                reload++;
-            } while (damage < 0);
-
+            
+            int damage = Convert.ToInt32(_generating.NextDouble() * MaxDamage);
+            
+            //patch negative numbers 
+            damage = damage > defense ? damage - defense : defense - damage;
+            
             enemy.Health -= damage;
-            return (damage, defense);
+            return (damage+defense, defense);
         }
 
         public int Defense()
