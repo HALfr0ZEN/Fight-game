@@ -4,10 +4,16 @@ namespace Hero_and_Dragon.Characters
 {
     class Hero
     {
-        public string Name { get; set; }
-        public int Health { get; set; }
-        public int MaxDamage { get; set; }
-        public int MaxDefense { get; set; }
+        public string Name { get; }
+        
+        private int _health;
+        public int Health
+        {
+            get => _health;
+            set => _health = value < 0 ? 0 : value; // set to zero if damage is > health
+        }
+        public int MaxDamage { get; }
+        public int MaxDefense { get; }
 
         private readonly Random _generating = new Random();
         
@@ -18,25 +24,27 @@ namespace Hero_and_Dragon.Characters
             this.MaxDamage = maxDamage;
             this.MaxDefense = maxDefense;
         }
-
-        public int Attack(Dragon dragon)
+        
+        /*Character attack*/
+        public (int damage, int defense) Attack(Dragon enemy)
         {
-            int damage = Convert.ToInt32(_generating.NextDouble() * MaxDamage);
-            int defense = dragon.Defense();
-            damage -= defense;
-            dragon.Health -= damage;
-            return damage;
+            int defense = enemy.Defense();
+            int damage;
+            int reload = 0;
+            do
+            {
+                /*reload if damage < 0 3* than define damage as zero*/
+                damage = reload <= 3 ? Convert.ToInt32(_generating.NextDouble() * MaxDamage) - defense : 0;
+                reload++;
+            } while (damage < 0);
+
+            enemy.Health -= damage;
+            return (damage, defense);
         }
 
         public int Defense()
         {
-            int defense = 0;
-            if (Math.Round(_generating.NextDouble()) == 1)
-            {
-                defense = _generating.Next(0, MaxDefense);
-            }
-
-            return defense;
+            return Math.Round(_generating.NextDouble()) == 1 ? _generating.Next(0, MaxDefense) : 0;
         }
         
         /*Check if character is alive*/
