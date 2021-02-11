@@ -9,15 +9,15 @@ namespace Hero_and_Dragon
         static void Main(string[] args)
         {
             /*fight in loop while one death*/
-            Hero hero = new Hero(name: "Legolas", 500, 35, 40);
-            Dragon dragon = new Dragon(name: "Parthumanax", 500, 35, 50);
+            Hero hero = new Hero(name: "Ornstein & Smough", 500, 35, 50);
+            Dragon dragon = new Dragon(name: "King Gwyn", 500, 35, 40);
 
 
-            for (int i = 1; true ; i++)
+            for (int i = 1;; i++)
             {
-                Console.WriteLine("---------------");
+                Console.WriteLine("--------------------");
                 Console.WriteLine("Round: " + i);
-                Console.WriteLine("---------------");
+                Console.WriteLine("--------------------");
 
                 (int damage, int enemyDefense) = hero.Attack(dragon);
                 
@@ -41,11 +41,11 @@ namespace Hero_and_Dragon
 
             if (hero.IsAlive())
             {
-                Console.WriteLine("Hrdina vyhrál");
+                Console.WriteLine(hero.Name + " won!");
             }
             else if (dragon.IsAlive())
             {
-                Console.WriteLine("Drak vyhrál");
+                Console.WriteLine(dragon.Name + " won!");
             }
             else
             {

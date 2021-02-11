@@ -33,10 +33,10 @@ namespace Hero_and_Dragon.Characters
             int damage = Convert.ToInt32(_generating.NextDouble() * MaxDamage);
             
             //patch negative numbers 
-            damage = damage > defense ? damage - defense : defense - damage;
+            if (damage > defense)
+                enemy.Health -= damage - defense;
             
-            enemy.Health -= damage;
-            return (damage+defense, defense);
+            return (damage, defense);
         }
 
         public int Defense()
