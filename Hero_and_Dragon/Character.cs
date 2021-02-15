@@ -4,7 +4,7 @@ namespace Hero_and_Dragon
 {
     class Character
     {
-        public string Name { get; set; }
+        public string Name { get; }
         
         private int _health;
 
@@ -14,8 +14,8 @@ namespace Hero_and_Dragon
             set => _health = value < 0 ? 0 : value; // set to zero if damage is > health
         }
 
-        public int MaxDamage { get; set; }
-        public int MaxDefense { get; set; }
+        public int MaxDamage { get; }
+        public int MaxDefense { get; }
 
         private readonly Random _generating = new Random();
 
