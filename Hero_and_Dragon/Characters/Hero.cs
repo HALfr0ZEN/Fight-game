@@ -43,7 +43,7 @@ namespace Hero_and_Dragon.Characters
 
         public int Defense()
         {
-            return Math.Round(_generating.NextDouble()) == 1 ? _generating.Next(0, MaxDefense) : 0;
+            return _generating.NextDouble() <= 0.5 ? _generating.Next(0, MaxDefense) : 0;
         }
 
         /*Check if character is alive*/

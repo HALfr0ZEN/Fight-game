@@ -15,7 +15,7 @@ namespace Hero_and_Dragon
 
             for (int i = 1;; i++)
             {
-                Console.WriteLine("--------------------");
+                Console.WriteLine(Environment.NewLine+"--------------------");
                 Console.WriteLine("Round: " + i);
                 Console.WriteLine("--------------------");
 
