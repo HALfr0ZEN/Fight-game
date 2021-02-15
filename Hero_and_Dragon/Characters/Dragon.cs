@@ -2,10 +2,12 @@
 
 namespace Hero_and_Dragon.Characters
 {
-    class Dragon:Character
+    class Dragon : Character
     {
         /*Calling constructor of the base class (bcs !parameter-less)*/
-        public Dragon(string name, int health, int maxDamage, int maxDefense) : base(name,  health, maxDamage,  maxDefense)
-        {}
+        public Dragon(string name, int health, int maxDamage, int maxDefense) : base(name, health, maxDamage,
+            maxDefense)
+        {
+        }
     }
 }

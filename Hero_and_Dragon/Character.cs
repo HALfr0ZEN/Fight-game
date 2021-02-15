@@ -5,7 +5,6 @@ namespace Hero_and_Dragon
     class Character
     {
         public string Name { get; }
-        
         private int _health;
 
         public int Health
@@ -26,7 +25,7 @@ namespace Hero_and_Dragon
             this.MaxDamage = maxDamage;
             this.MaxDefense = maxDefense;
         }
-        
+
         /*Character attack*/
         public (int damage, int defense) Attack(Character enemy)
         {
