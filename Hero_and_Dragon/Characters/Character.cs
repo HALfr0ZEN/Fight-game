@@ -15,8 +15,8 @@ namespace Hero_and_Dragon.Characters
             set => _health = value < 0 ? 0 : value; // set to zero if damage is > health
         }
 
-        private int MaxDamage { get; }
-        private int MaxDefense { get; }
+        protected int MaxDamage { get; }
+        protected int MaxDefense { get; }
 
         protected readonly Random generating = new Random();
 
@@ -31,7 +31,7 @@ namespace Hero_and_Dragon.Characters
         /*
          *  Character attack
          */
-        public int Attack(Character enemy)
+        public virtual int Attack(Character enemy)
         {
             int defense = enemy.Defense();
 
@@ -47,7 +47,7 @@ namespace Hero_and_Dragon.Characters
         /*
          *  Random character defense
          */
-        private int Defense()
+        public virtual int Defense()
         {
             return generating.NextDouble() <= 0.5 ? generating.Next(0, MaxDefense) : 0;
         }

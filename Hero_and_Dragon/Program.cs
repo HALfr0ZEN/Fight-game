@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Channels;
 using Hero_and_Dragon.Characters;
+using Hero_and_Dragon.Items;
 
 namespace Hero_and_Dragon
 {
@@ -9,11 +10,38 @@ namespace Hero_and_Dragon
     {
         static void Main(string[] args)
         {
-            /*fight in loop while one death*/
-            Hero hero = new Hero(name: "Geralt", 50, 60, 50);
-            Hero hero2 = new Hero(name: "Dovakhiin", 50, 60, 40);
-            Dragon dragon = new Dragon(name: "Alduin", 60, 40, 80);
-            Dragon dragon2 = new Dragon(name: "Smaug", 60, 40, 85);
+            /* Characters */
+            Hero hero = new Hero(
+                offensiveItem: new OffensiveItem(40, 2, "Silver sword"),
+                defensiveItem: null,
+                name:          "Geralt", 
+                health:        50, 
+                maxDamage:     15, 
+                maxDefense:    50
+                );
+            
+            Hero hero2 = new Hero(
+                offensiveItem: new OffensiveItem(40, 2, "Bow"),
+                defensiveItem: new DefensiveItem(40, 2, "shield"),
+                name:          "Dovakhiin",
+                health:        50,
+                maxDamage:     5,
+                maxDefense:    20
+                );
+            
+            Dragon dragon = new Dragon(
+                name:          "Alduin", 
+                health:        60, 
+                maxDamage:     40, 
+                maxDefense:    80
+                );
+            
+            Dragon dragon2 = new Dragon(
+                name:          "Smaug",
+                health:        60, 
+                maxDamage:     40, 
+                maxDefense:    85
+                );
             
             List<Character> characters = new List<Character>();
             
