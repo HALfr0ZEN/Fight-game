@@ -11,9 +11,9 @@ namespace Hero_and_Dragon
         {
             /*fight in loop while one death*/
             Hero hero = new Hero(name: "Geralt", 50, 60, 50);
-            Hero hero2 = new Hero(name: "Dovakhin", 50, 60, 40);
+            Hero hero2 = new Hero(name: "Dovakhiin", 50, 60, 40);
             Dragon dragon = new Dragon(name: "Alduin", 60, 40, 80);
-            Dragon dragon2 = new Dragon(name: "Šmak", 60, 40, 85);
+            Dragon dragon2 = new Dragon(name: "Smaug", 60, 40, 85);
             
             List<Character> characters = new List<Character>();
             
