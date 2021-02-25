@@ -16,16 +16,21 @@ namespace Hero_and_Dragon.Characters
     {
         private readonly OffensiveItem _offensiveItem;
         private readonly DefensiveItem _defensiveItem;
-        public Hero(OffensiveItem offensiveItem, DefensiveItem defensiveItem, string name, int health, int maxDamage, int maxDefense) : base(name, health, maxDamage, maxDefense)
+
+        public Hero(OffensiveItem offensiveItem, DefensiveItem defensiveItem, string name, int health, int maxDamage,
+            int maxDefense) : base(name, health, maxDamage, maxDefense)
         {
             _offensiveItem = offensiveItem;
             _defensiveItem = defensiveItem;
         }
+
         public override int Attack(Character enemy)
         {
             int defense = enemy.Defense();
 
-            int damage = generating.Next(0, MaxDamage + (_offensiveItem?.Damage ?? 0)); //pokud je null tak 0
+            int damage =
+                generating.Next(0,
+                    MaxDamage + (_offensiveItem?.Damage ?? 0)); //if null then return 0 (null coalescing operator)
 
             //patch negative numbers 
             if (damage > defense)
@@ -33,7 +38,7 @@ namespace Hero_and_Dragon.Characters
 
             return damage;
         }
-        
+
         public override int Defense()
         {
             return generating.NextDouble() <= 0.5 ? generating.Next(0, MaxDefense + (_defensiveItem?.Defense ?? 0)) : 0;
