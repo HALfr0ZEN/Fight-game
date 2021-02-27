@@ -34,7 +34,7 @@ namespace Hero_and_Dragon.Characters
         {
             int defense = enemy.Defense();
 
-            int damage = Generating.Next(0,MaxDamage);
+            int damage = Generating.Next(0, MaxDamage);
 
             //patch negative numbers 
             if (damage > defense)
@@ -66,7 +66,7 @@ namespace Hero_and_Dragon.Characters
         public Character SelectOpponent(List<Character> characters)
         {
             List<Character> opponents = new List<Character>();
-            
+
             //Loop thru all players (characters)
             foreach (var character in characters)
             {
@@ -77,7 +77,7 @@ namespace Hero_and_Dragon.Characters
                     opponents.Add(character);
                 }
             }
-            
+
             // pick one random opponent and return it
             return opponents.Count > 0 ? opponents[Generating.Next(0, opponents.Count)] : null;
         }

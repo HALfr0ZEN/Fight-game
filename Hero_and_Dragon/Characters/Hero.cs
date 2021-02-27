@@ -1,19 +1,13 @@
 ﻿using System.Collections.Generic;
 using Hero_and_Dragon.Items;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace Hero_and_Dragon.Characters
 {
-    /*
-     Hrdina bude mít navíc předměty; konkrétně meč a štít. Tyto předměty budou vytvořeny v samostatné třídě,
-     a kromě hodnot velikosti poškození (meč) a obrany (štít) budou mít také název a váhu (tzn., že mají společná data). 
-     Hrdina je poté bude používat (zde bude provedena kompozice). Meč a štít budou aplikovány u hrdiny v metodě pro útok,
-     resp. pro obranu (tzn. že se do výpočtu budou započítávat hodnoty vybavení). Hrdina tak bude mít jiný výpočet útoku a obrany,
-     než jaký má drak.
-    */
     class Hero : Character
     {
-        private readonly List <OffensiveItem> _offensiveItem = new List<OffensiveItem>();
-        private readonly List <DefensiveItem> _defensiveItem = new List<DefensiveItem>();
+        private readonly List<OffensiveItem> _offensiveItem = new List<OffensiveItem>();
+        private readonly List<DefensiveItem> _defensiveItem = new List<DefensiveItem>();
 
         public Hero(string name, int health, int maxDamage,
             int maxDefense, List<Item> items) : base(name, health, maxDamage, maxDefense)
@@ -39,10 +33,12 @@ namespace Hero_and_Dragon.Characters
             int defense = enemy.Defense();
 
             // if weapon is null than return 0 else return dmg
-            int chosenWeapon = _offensiveItem.Count > 0 ? _offensiveItem[Generating.Next(0, _offensiveItem.Count-1)].Damage : 0;
+            int chosenWeapon = _offensiveItem.Count > 0
+                ? _offensiveItem[Generating.Next(0, _offensiveItem.Count - 1)].Damage
+                : 0;
             // generate random dmg from 0 to maxDmg + weapon dmg
             int damage = Generating.Next(0, MaxDamage + chosenWeapon);
-             
+
             // If damage is grater than defense than Health = Health - (damage - defense) 
             if (damage > defense)
                 enemy.Health -= damage - defense;
@@ -53,7 +49,9 @@ namespace Hero_and_Dragon.Characters
         public override int Defense()
         {
             // if shield or armor is null than return 0 else return def
-            int chosenDefense = _defensiveItem.Count > 0 ? _defensiveItem[Generating.Next(0, _defensiveItem.Count-1)].Defense : 0;
+            int chosenDefense = _defensiveItem.Count > 0
+                ? _defensiveItem[Generating.Next(0, _defensiveItem.Count - 1)].Defense
+                : 0;
             
             return Generating.NextDouble() <= 0.5 ? Generating.Next(0, MaxDefense + chosenDefense) : 0;
         }
