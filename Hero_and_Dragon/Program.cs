@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Channels;
 using Hero_and_Dragon.Characters;
 using Hero_and_Dragon.Items;
 
@@ -75,7 +74,7 @@ namespace Hero_and_Dragon
             //characters.ForEach(Character => Console.WriteLine(Character.IsAlive() ? Character.Name : null));
         }
 
-        public static int HeroAliveCount(List<Character> characters)
+        private static int HeroAliveCount(List<Character> characters)
         {
             int countAlive = 0;
             foreach (Character character in characters)
@@ -89,7 +88,7 @@ namespace Hero_and_Dragon
             return countAlive;
         }
 
-        public static int DragonAliveCount(List<Character> characters)
+        private static int DragonAliveCount(List<Character> characters)
         {
             int countAlive = 0;
             foreach (Character character in characters)

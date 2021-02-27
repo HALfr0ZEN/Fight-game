@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
 namespace Hero_and_Dragon.Characters
 {
@@ -18,7 +17,7 @@ namespace Hero_and_Dragon.Characters
         protected int MaxDamage { get; }
         protected int MaxDefense { get; }
 
-        protected readonly Random generating = new Random();
+        protected readonly Random Generating = new Random();
 
         protected Character(string name, int health, int maxDamage, int maxDefense)
         {
@@ -35,7 +34,7 @@ namespace Hero_and_Dragon.Characters
         {
             int defense = enemy.Defense();
 
-            int damage = generating.Next(0,MaxDamage);
+            int damage = Generating.Next(0,MaxDamage);
 
             //patch negative numbers 
             if (damage > defense)
@@ -49,7 +48,7 @@ namespace Hero_and_Dragon.Characters
          */
         public virtual int Defense()
         {
-            return generating.NextDouble() <= 0.5 ? generating.Next(0, MaxDefense) : 0;
+            return Generating.NextDouble() <= 0.5 ? Generating.Next(0, MaxDefense) : 0;
         }
 
         /*
@@ -80,7 +79,7 @@ namespace Hero_and_Dragon.Characters
             }
             
             // pick one random opponent and return it
-            return opponents.Count > 0 ? opponents[generating.Next(0, opponents.Count)] : null;
+            return opponents.Count > 0 ? opponents[Generating.Next(0, opponents.Count)] : null;
         }
     }
 }
