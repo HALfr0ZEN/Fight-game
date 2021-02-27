@@ -9,29 +9,27 @@ namespace Hero_and_Dragon
     {
         static void Main(string[] args)
         {
+            /*items*/
             List<Item> geraltItems = new List<Item>();
             geraltItems.Add(new OffensiveItem(40, 2, "Silver sword"));
-            
+
             List<Item> dovakhiinItems = new List<Item>();
             dovakhiinItems.Add(new OffensiveItem(40, 2, "Bow"));
             dovakhiinItems.Add(new DefensiveItem(40, 2, "shield"));
 
             /* Characters */
-            Hero geralt = new Hero( "Geralt", 50, 15, 50, geraltItems);
-
-            Hero dovakhiin = new Hero( "Dovakhiin", 50, 5, 20, dovakhiinItems);
-
+            Hero geralt = new Hero("Geralt", 50, 15, 50, geraltItems);
+            Hero dovakhiin = new Hero("Dovakhiin", 50, 5, 20, dovakhiinItems);
             Dragon alduin = new Dragon("Alduin", 60, 40, 80);
-
             Dragon smaug = new Dragon("Smaug", 60, 40, 85);
 
             List<Character> characters = new List<Character>();
-
             characters.Add(geralt);
             characters.Add(dovakhiin);
             characters.Add(alduin);
             characters.Add(smaug);
 
+            /*code*/
             for (int i = 1; HeroAliveCount(characters) > 0 && DragonAliveCount(characters) > 0; i++)
             {
                 Console.WriteLine("Round: " + i);
@@ -61,6 +59,7 @@ namespace Hero_and_Dragon
             }
 
             Console.WriteLine("Winners!" + Environment.NewLine + "¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤");
+
             foreach (var character in characters)
             {
                 if (character.IsAlive())
@@ -70,8 +69,6 @@ namespace Hero_and_Dragon
             }
 
             Console.WriteLine("¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤");
-
-            //characters.ForEach(Character => Console.WriteLine(Character.IsAlive() ? Character.Name : null));
         }
 
         private static int HeroAliveCount(List<Character> characters)
