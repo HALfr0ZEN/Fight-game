@@ -10,33 +10,28 @@ namespace Hero_and_Dragon
     {
         static void Main(string[] args)
         {
+            List<Item> geraltItems = new List<Item>();
+            geraltItems.Add(new OffensiveItem(40, 2, "Silver sword"));
+            
+            List<Item> dovakhiinItems = new List<Item>();
+            dovakhiinItems.Add(new OffensiveItem(40, 2, "Bow"));
+            dovakhiinItems.Add(new DefensiveItem(40, 2, "shield"));
+
             /* Characters */
-            Hero hero = new Hero(
-                new OffensiveItem(40, 2, "Silver sword"),
-                null,
-                "Geralt", 50, 15, 50
-            );
+            Hero geralt = new Hero( "Geralt", 50, 15, 50, geraltItems);
 
-            Hero hero2 = new Hero(
-                new OffensiveItem(40, 2, "Bow"),
-                new DefensiveItem(40, 2, "shield"),
-                "Dovakhiin", 50, 5, 20
-            );
+            Hero dovakhiin = new Hero( "Dovakhiin", 50, 5, 20, dovakhiinItems);
 
-            Dragon dragon = new Dragon(
-                "Alduin", 60, 40, 80
-            );
+            Dragon alduin = new Dragon("Alduin", 60, 40, 80);
 
-            Dragon dragon2 = new Dragon(
-                "Smaug", 60, 40, 85
-            );
+            Dragon smaug = new Dragon("Smaug", 60, 40, 85);
 
             List<Character> characters = new List<Character>();
 
-            characters.Add(hero);
-            characters.Add(hero2);
-            characters.Add(dragon);
-            characters.Add(dragon2);
+            characters.Add(geralt);
+            characters.Add(dovakhiin);
+            characters.Add(alduin);
+            characters.Add(smaug);
 
             for (int i = 1; HeroAliveCount(characters) > 0 && DragonAliveCount(characters) > 0; i++)
             {

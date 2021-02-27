@@ -14,25 +14,38 @@ namespace Hero_and_Dragon.Characters
     */
     class Hero : Character
     {
-        private readonly OffensiveItem _offensiveItem;
-        private readonly DefensiveItem _defensiveItem;
+        private readonly List <OffensiveItem> _offensiveItem = new List<OffensiveItem>();
+        private readonly List <DefensiveItem> _defensiveItem = new List<DefensiveItem>();
 
-        public Hero(OffensiveItem offensiveItem, DefensiveItem defensiveItem, string name, int health, int maxDamage,
-            int maxDefense) : base(name, health, maxDamage, maxDefense)
+        public Hero(string name, int health, int maxDamage,
+            int maxDefense, List<Item> items) : base(name, health, maxDamage, maxDefense)
         {
-            _offensiveItem = offensiveItem;
-            _defensiveItem = defensiveItem;
+            foreach (var item in items)
+            {
+                switch (item)
+                {
+                    /*item AS DefensiveItem = defense*/
+                    case DefensiveItem defense:
+                        _defensiveItem.Add(defense);
+                        break;
+                    /*item AS offensiveItem = offense*/
+                    case OffensiveItem offense:
+                        _offensiveItem.Add(offense);
+                        break;
+                }
+            }
         }
 
         public override int Attack(Character enemy)
         {
             int defense = enemy.Defense();
 
-            int damage =
-                generating.Next(0,
-                    MaxDamage + (_offensiveItem?.Damage ?? 0)); //if null then return 0 (null coalescing operator)
-
-            //patch negative numbers 
+            // if weapon is null than return 0 else return dmg
+            int chosenWeapon = _offensiveItem.Count > 0 ? _offensiveItem[generating.Next(0, _offensiveItem.Count-1)].Damage : 0;
+            // generate random dmg from 0 to maxDmg + weapon dmg
+            int damage = generating.Next(0, MaxDamage + chosenWeapon);
+             
+            // If damage is grater than defense than Health = Health - (damage - defense) 
             if (damage > defense)
                 enemy.Health -= damage - defense;
 
@@ -41,7 +54,10 @@ namespace Hero_and_Dragon.Characters
 
         public override int Defense()
         {
-            return generating.NextDouble() <= 0.5 ? generating.Next(0, MaxDefense + (_defensiveItem?.Defense ?? 0)) : 0;
+            // if shield or armor is null than return 0 else return def
+            int chosenDefense = _defensiveItem.Count > 0 ? _defensiveItem[generating.Next(0, _defensiveItem.Count-1)].Defense : 0;
+            
+            return generating.NextDouble() <= 0.5 ? generating.Next(0, MaxDefense + chosenDefense) : 0;
         }
     }
 }
