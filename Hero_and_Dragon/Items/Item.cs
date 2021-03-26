@@ -1,6 +1,6 @@
 ﻿namespace Hero_and_Dragon.Items
 {
-    public class Item
+    public abstract class Item
     {
         protected int Weight { get; }
         protected string Name { get; }

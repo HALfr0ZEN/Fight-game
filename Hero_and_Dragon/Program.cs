@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Hero_and_Dragon.Characters;
+using Hero_and_Dragon.Enums;
 using Hero_and_Dragon.Items;
 
 namespace Hero_and_Dragon
@@ -9,47 +11,55 @@ namespace Hero_and_Dragon
     {
         static void Main(string[] args)
         {
-            /*items*/
-            List<Item> geraltItems = new List<Item>();
-            geraltItems.Add(new OffensiveItem(40, 2, "Silver sword"));
+            List<Item> dovakhiinItems = new List<Item>()
+            {
+                new OffensiveItem(40, 2, "Bow"),
+                new DefensiveItem(40, 2, "shield")
+            };
 
-            List<Item> dovakhiinItems = new List<Item>();
-            dovakhiinItems.Add(new OffensiveItem(40, 2, "Bow"));
-            dovakhiinItems.Add(new DefensiveItem(40, 2, "shield"));
-
-            /* Characters */
-            Hero geralt = new Hero("Geralt", 50, 15, 50, geraltItems);
-            Hero dovakhiin = new Hero("Dovakhiin", 50, 5, 20, dovakhiinItems);
-            Dragon alduin = new Dragon("Alduin", 60, 40, 80);
-            Dragon smaug = new Dragon("Smaug", 60, 40, 85);
-
-            List<Character> characters = new List<Character>();
-            characters.Add(geralt);
-            characters.Add(dovakhiin);
-            characters.Add(alduin);
-            characters.Add(smaug);
-
-            /*code*/
-            for (int i = 1; HeroAliveCount(characters) > 0 && DragonAliveCount(characters) > 0; i++)
+            List<Character> characters = new List<Character>()
+            {
+                new Hero("Geralt", 50, 15, 50),
+                new Warrior("Dovakhiin", 50, 5, 20, dovakhiinItems),
+                new Dragon("Alduin", 60, 40, 80),
+                new Dragon("Smaug", 60, 40, 85)
+            };
+            
+            
+            for (int i = 1; CanFight(characters); i++)
             {
                 Console.WriteLine("Round: " + i);
                 Console.WriteLine("===================");
-
                 int j = 0;
+                
                 foreach (Character attacker in characters)
                 {
                     if (attacker.IsAlive())
                     {
+                       
                         Character opponent = attacker.SelectOpponent(characters);
 
                         if (opponent == null)
-                        {
                             break;
-                        }
 
                         ++j;
                         Console.WriteLine("Move: " + j + Environment.NewLine + "-------------------");
 
+                        switch (attacker.Escape())
+                        {
+                            case (EscapeEnum.Escaped):
+                            {
+                                Console.WriteLine(attacker.Name + " escaped..."); 
+                                continue;
+                            }
+                            case (EscapeEnum.Tried):
+                            {
+                                Console.WriteLine(attacker.Name + " tried to escape..."); 
+                                continue;
+                            }
+                        }
+                        
+                        
                         int damage = attacker.Attack(opponent);
                         Console.WriteLine(attacker.Name + " attack with " + damage);
                         Console.WriteLine(opponent.Name + " health is now " + opponent.Health);
@@ -70,33 +80,20 @@ namespace Hero_and_Dragon
 
             Console.WriteLine("¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤");
         }
+        
+        // if more than 1 fraction is capable of fighting return true
 
-        private static int HeroAliveCount(List<Character> characters)
+        private static bool CanFight(List<Character> characters)
         {
-            int countAlive = 0;
-            foreach (Character character in characters)
+
+            List<int> countAlive = new List<int>();
+            
+            for (int i = 0; i < 4; i++)
             {
-                if (character is Hero && character.IsAlive())
-                {
-                    ++countAlive;
-                }
+                countAlive.Add(characters.FindAll(character => (int) character.Fraction == i && character.IsAlive()).Count > 0 ? 1 : 0);
             }
 
-            return countAlive;
-        }
-
-        private static int DragonAliveCount(List<Character> characters)
-        {
-            int countAlive = 0;
-            foreach (Character character in characters)
-            {
-                if (character is Dragon && character.IsAlive())
-                {
-                    ++countAlive;
-                }
-            }
-
-            return countAlive;
+            return countAlive.Sum() > 1;
         }
     }
 }

@@ -1,9 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using Hero_and_Dragon.Enums;
 
 namespace Hero_and_Dragon.Characters
 {
-    class Character
+    /*
+     *
+     * Character is a abstract class that describes base of all characters in the game
+     * He defines that everyone without overridden SelectOpponent can kill everyone (except themself)
+     * Every character have a name, health, maximal damage, maximal defense, randomGenerated number and belongs to one of the fractions
+     * Every character can attack and defense and can be checked if still alive
+     */
+    internal abstract class Character
     {
         public string Name { get; }
         private int _health;
@@ -14,22 +22,26 @@ namespace Hero_and_Dragon.Characters
             set => _health = value < 0 ? 0 : value; // set to zero if damage is > health
         }
 
+        private int _maxHealth;
+
+        private bool Escaped { get; set; }
+        private int EscapeTime { get; set; }
         protected int MaxDamage { get; }
         protected int MaxDefense { get; }
 
         protected readonly Random Generating = new Random();
 
-        protected Character(string name, int health, int maxDamage, int maxDefense)
+        protected internal Fractions Fraction{ get; }
+        protected Character(string name, int health, int maxDamage, int maxDefense, Fractions fraction)
         {
-            this.Name = name;
-            this.Health = health;
-            this.MaxDamage = maxDamage;
-            this.MaxDefense = maxDefense;
+            Name = name;
+            Health = health;
+            _maxHealth = health;
+            MaxDamage = maxDamage;
+            MaxDefense = maxDefense;
+            Fraction = fraction;
         }
-
-        /*
-         *  Character attack
-         */
+        
         public virtual int Attack(Character enemy)
         {
             int defense = enemy.Defense();
@@ -42,44 +54,47 @@ namespace Hero_and_Dragon.Characters
 
             return damage;
         }
-
-        /*
-         *  Random character defense
-         */
+        
         public virtual int Defense()
         {
             return Generating.NextDouble() <= 0.5 ? Generating.Next(0, MaxDefense) : 0;
         }
-
-        /*
-         *  Check if character is alive
-         */
+        
         public bool IsAlive()
         {
             return Health > 0;
         }
-
-        /*
-         *  Select opponents from given list
-         *  opponents are objects with different type than called
-         */
-        public Character SelectOpponent(List<Character> characters)
+        
+        public virtual Character SelectOpponent(List<Character> characters)
         {
             List<Character> opponents = new List<Character>();
-
-            //Loop thru all players (characters)
             foreach (var character in characters)
             {
-                // check if selected opponent is not ally and if its alive
-                // if true add him into opponents list
-                if (character.IsAlive() && character.GetType() != GetType())
-                {
+                if (character.IsAlive() && character != this)
                     opponents.Add(character);
-                }
             }
 
-            // pick one random opponent and return it
             return opponents.Count > 0 ? opponents[Generating.Next(0, opponents.Count)] : null;
+        }
+        
+        public EscapeEnum Escape()
+        {
+            if (Health >= _maxHealth * 0.5)
+                return EscapeEnum.DontHaveValues;
+            
+            if (EscapeTime == 0)
+            {
+                if (!Escaped && Generating.NextDouble() <= 0.2)
+                {
+                    Escaped = true;
+                    Health = 0;
+                    return EscapeEnum.Escaped;
+                }
+                EscapeTime = 2; /*time that character need to wait before new try*/
+                return EscapeEnum.Tried;
+            }
+            --EscapeTime;
+            return EscapeEnum.DontHaveValues;
         }
     }
 }
