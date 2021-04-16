@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Hero_and_Dragon.Enums;
 using Hero_and_Dragon.Items;
+using Hero_and_Dragon.Magic;
 
 namespace Hero_and_Dragon.Characters
 {
@@ -10,15 +13,17 @@ namespace Hero_and_Dragon.Characters
      */
     class Hero : Warrior
     {
+        public int Intelligence { get; }
+        
         public Hero(string name, int health, int maxDamage, int maxDefense, List<Item> items) : base(name, health, maxDamage, maxDefense, items)
         {
         }
 
-        public Hero(string name, int health, int maxDamage, int maxDefense, OffensiveItem offensiveItem) : base(name, health, maxDamage, maxDefense, offensiveItem)
+        public Hero(string name, int health, int maxDamage, int maxDefense, Offensive offensiveItem) : base(name, health, maxDamage, maxDefense, offensiveItem)
         {
         }
 
-        public Hero(string name, int health, int maxDamage, int maxDefense, DefensiveItem defensiveItem) : base(name, health, maxDamage, maxDefense, defensiveItem)
+        public Hero(string name, int health, int maxDamage, int maxDefense, Defensive defensiveItem) : base(name, health, maxDamage, maxDefense, defensiveItem)
         {
         }
 
@@ -28,14 +33,7 @@ namespace Hero_and_Dragon.Characters
         
         public override Character SelectOpponent(List<Character> characters)
         {
-            List<Character> opponents = new List<Character>();
-            foreach (var character in characters)
-            {
-                if (character.IsAlive() && character.Fraction != Fractions.People)
-                {
-                    opponents.Add(character);
-                }
-            }
+            List<Character> opponents = characters.Where(character => character.IsAlive() && character.Fraction != Fractions.People).ToList();
 
             return opponents.Count > 0 ? opponents[Generating.Next(0, opponents.Count)] : null;
         }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Hero_and_Dragon.Items;
 using Hero_and_Dragon.Enums;
 
@@ -11,8 +12,8 @@ namespace Hero_and_Dragon.Characters
      */
     class Warrior : Character
     {
-        private readonly List<OffensiveItem> _offensiveItem = new List<OffensiveItem>();
-        private readonly List<DefensiveItem> _defensiveItem = new List<DefensiveItem>();
+        private readonly List<Offensive> _offensiveItem = new List<Offensive>();
+        private readonly List<Defensive> _defensiveItem = new List<Defensive>();
         
         public Warrior(string name, int health, int maxDamage,
             int maxDefense, List<Item> items) : base(name, health, maxDamage, maxDefense, Fractions.People)
@@ -22,24 +23,24 @@ namespace Hero_and_Dragon.Characters
                 switch (item)
                 {
                     /*item AS DefensiveItem = defense*/
-                    case DefensiveItem defense:
+                    case Defensive defense:
                         _defensiveItem.Add(defense);
                         break;
                     /*item AS offensiveItem = offense*/
-                    case OffensiveItem offense:
+                    case Offensive offense:
                         _offensiveItem.Add(offense);
                         break;
                 }
             }
         }
 
-        public Warrior(string name, int health, int maxDamage, int maxDefense, OffensiveItem offensiveItem) : base(name,
+        public Warrior(string name, int health, int maxDamage, int maxDefense, Offensive offensiveItem) : base(name,
             health, maxDamage, maxDefense, Fractions.People)
         {
             _offensiveItem.Add(offensiveItem);
         }
 
-        public Warrior(string name, int health, int maxDamage, int maxDefense, DefensiveItem defensiveItem) : base(name,
+        public Warrior(string name, int health, int maxDamage, int maxDefense, Defensive defensiveItem) : base(name,
             health, maxDamage, maxDefense, Fractions.People)
         {
             _defensiveItem.Add(defensiveItem);
@@ -75,6 +76,12 @@ namespace Hero_and_Dragon.Characters
                 : 0;
 
             return Generating.NextDouble() <= 0.5 ? Generating.Next(0, MaxDefense + chosenDefense) : 0;
+        }
+        
+        public override double GetStrength()
+        {
+            double outa = 0.3 * Health + 0.4 * (MaxDamage + _offensiveItem.Max()?.Damage ?? 0) + 0.3 * (MaxDefense + _defensiveItem.Max()?.Defense ?? 0);
+            return outa;
         }
     }
 }

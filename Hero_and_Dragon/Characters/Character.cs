@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Hero_and_Dragon.Enums;
 
 namespace Hero_and_Dragon.Characters
@@ -11,7 +12,7 @@ namespace Hero_and_Dragon.Characters
      * Every character have a name, health, maximal damage, maximal defense, randomGenerated number and belongs to one of the fractions
      * Every character can attack and defense and can be checked if still alive
      */
-    internal abstract class Character
+    internal abstract class Character : IComparable<Character>
     {
         public string Name { get; }
         private int _health;
@@ -22,7 +23,9 @@ namespace Hero_and_Dragon.Characters
             set => _health = value < 0 ? 0 : value; // set to zero if damage is > health
         }
 
-        private int _maxHealth;
+        public int PrevHealth;
+
+        protected int MaxHealth;
 
         private bool Escaped { get; set; }
         private int EscapeTime { get; set; }
@@ -36,7 +39,8 @@ namespace Hero_and_Dragon.Characters
         {
             Name = name;
             Health = health;
-            _maxHealth = health;
+            PrevHealth = Health;
+            MaxHealth = health;
             MaxDamage = maxDamage;
             MaxDefense = maxDefense;
             Fraction = fraction;
@@ -48,6 +52,7 @@ namespace Hero_and_Dragon.Characters
 
             int damage = Generating.Next(0, MaxDamage);
 
+            enemy.PrevHealth = enemy.Health; 
             //patch negative numbers 
             if (damage > defense)
                 enemy.Health -= damage - defense;
@@ -67,19 +72,14 @@ namespace Hero_and_Dragon.Characters
         
         public virtual Character SelectOpponent(List<Character> characters)
         {
-            List<Character> opponents = new List<Character>();
-            foreach (var character in characters)
-            {
-                if (character.IsAlive() && character != this)
-                    opponents.Add(character);
-            }
+            List<Character> opponents = characters.Where(character => character.IsAlive() && character != this).ToList();
 
             return opponents.Count > 0 ? opponents[Generating.Next(0, opponents.Count)] : null;
         }
         
         public EscapeEnum Escape()
         {
-            if (Health >= _maxHealth * 0.5)
+            if (Health >= MaxHealth * 0.5)
                 return EscapeEnum.DontHaveValues;
             
             if (EscapeTime == 0)
@@ -95,6 +95,16 @@ namespace Hero_and_Dragon.Characters
             }
             --EscapeTime;
             return EscapeEnum.DontHaveValues;
+        }
+
+        public int CompareTo(Character other)
+        {
+            return other == null ? 1 : GetStrength().CompareTo(other.GetStrength());
+        }
+
+        public virtual double GetStrength()
+        {
+            return 0.3 * Health + 0.4 * MaxDamage + 0.3 * MaxDefense;
         }
     }
 }
