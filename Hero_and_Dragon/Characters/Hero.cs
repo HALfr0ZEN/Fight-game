@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Hero_and_Dragon.Enums;
 using Hero_and_Dragon.Items;
-using Hero_and_Dragon.Magic;
 
 namespace Hero_and_Dragon.Characters
 {
@@ -13,8 +12,6 @@ namespace Hero_and_Dragon.Characters
      */
     class Hero : Warrior
     {
-        public int Intelligence { get; }
-        
         public Hero(string name, int health, int maxDamage, int maxDefense, List<Item> items) : base(name, health, maxDamage, maxDefense, items)
         {
         }
@@ -35,7 +32,7 @@ namespace Hero_and_Dragon.Characters
         {
             List<Character> opponents = characters.Where(character => character.IsAlive() && character.Fraction != Fractions.People).ToList();
 
-            return opponents.Count > 0 ? opponents[Generating.Next(0, opponents.Count)] : null;
+            return opponents.Count > 0 ? opponents[Dice.Instance.Throw(0, opponents.Count)] : null;
         }
     }
 }

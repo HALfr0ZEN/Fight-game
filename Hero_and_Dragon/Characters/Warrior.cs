@@ -56,10 +56,10 @@ namespace Hero_and_Dragon.Characters
 
             // if weapon is null than return 0 else return dmg
             int chosenWeapon = _offensiveItem.Count > 0
-                ? _offensiveItem[Generating.Next(0, _offensiveItem.Count - 1)].Damage
+                ? _offensiveItem[Dice.Instance.Throw(0, _offensiveItem.Count - 1)].Damage
                 : 0;
             // generate random dmg from 0 to maxDmg + weapon dmg
-            int damage = Generating.Next(0, MaxDamage + chosenWeapon);
+            int damage = Dice.Instance.Throw(0, MaxDamage + chosenWeapon);
 
             // If damage is grater than defense than Health = Health - (damage - defense) 
             if (damage > defense)
@@ -72,10 +72,10 @@ namespace Hero_and_Dragon.Characters
         {
             // if shield or armor is null than return 0 else return def
             int chosenDefense = _defensiveItem.Count > 0
-                ? _defensiveItem[Generating.Next(0, _defensiveItem.Count - 1)].Defense
+                ? _defensiveItem[Dice.Instance.Throw(0, _defensiveItem.Count - 1)].Defense
                 : 0;
 
-            return Generating.NextDouble() <= 0.5 ? Generating.Next(0, MaxDefense + chosenDefense) : 0;
+            return Dice.Instance.Throw() <= 0.5 ? Dice.Instance.Throw(0, MaxDefense + chosenDefense) : 0;
         }
         
         public override double GetStrength()

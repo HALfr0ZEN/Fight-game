@@ -31,9 +31,7 @@ namespace Hero_and_Dragon.Characters
         private int EscapeTime { get; set; }
         protected int MaxDamage { get; }
         protected int MaxDefense { get; }
-
-        protected readonly Random Generating = new Random();
-
+        
         protected internal Fractions Fraction{ get; }
         protected Character(string name, int health, int maxDamage, int maxDefense, Fractions fraction)
         {
@@ -50,7 +48,7 @@ namespace Hero_and_Dragon.Characters
         {
             int defense = enemy.Defense();
 
-            int damage = Generating.Next(0, MaxDamage);
+            int damage = Dice.Instance.Throw(0, MaxDamage);
 
             enemy.PrevHealth = enemy.Health; 
             //patch negative numbers 
@@ -62,7 +60,7 @@ namespace Hero_and_Dragon.Characters
         
         public virtual int Defense()
         {
-            return Generating.NextDouble() <= 0.5 ? Generating.Next(0, MaxDefense) : 0;
+            return Dice.Instance.Throw() <= 0.5 ? Dice.Instance.Throw(0, MaxDefense) : 0;
         }
         
         public bool IsAlive()
@@ -74,7 +72,7 @@ namespace Hero_and_Dragon.Characters
         {
             List<Character> opponents = characters.Where(character => character.IsAlive() && character != this).ToList();
 
-            return opponents.Count > 0 ? opponents[Generating.Next(0, opponents.Count)] : null;
+            return opponents.Count > 0 ? opponents[Dice.Instance.Throw(0, opponents.Count)] : null;
         }
         
         public EscapeEnum Escape()
@@ -84,7 +82,7 @@ namespace Hero_and_Dragon.Characters
             
             if (EscapeTime == 0)
             {
-                if (!Escaped && Generating.NextDouble() <= 0.2)
+                if (!Escaped && Dice.Instance.Throw() <= 0.2)
                 {
                     Escaped = true;
                     Health = 0;

@@ -23,7 +23,7 @@ namespace Hero_and_Dragon.Characters
                     opponents.Add(character);
                 }
             }
-            return opponents.Count > 0 ? opponents[Generating.Next(0, opponents.Count)] : null;
+            return opponents.Count > 0 ? opponents[Dice.Instance.Throw(0, opponents.Count)] : null;
         }
     }
 }
