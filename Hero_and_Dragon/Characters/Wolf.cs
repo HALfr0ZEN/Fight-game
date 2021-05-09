@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Hero_and_Dragon.Enums;
 
 namespace Hero_and_Dragon.Characters
@@ -9,21 +10,13 @@ namespace Hero_and_Dragon.Characters
      */
     class Wolf : Character
     {
-        public Wolf(string name, int health, int maxDamage, int maxDefense) : base(name, health, maxDamage, maxDefense, Fractions.Animals)
+        public Wolf(string name, int health, int damage, int defense) : base(name, health, damage, defense, Fractions.Animals)
         {
         }
-        public override Character SelectOpponent(List<Character> characters)
+        public override void SelectOpponent(List<Character> characters)
         {
-            List<Character> opponents = new List<Character>();
-
-            foreach (var character in characters)
-            {
-                if (character.IsAlive() && character.GetType() != GetType())
-                {
-                    opponents.Add(character);
-                }
-            }
-            return opponents.Count > 0 ? opponents[Dice.Instance.Throw(0, opponents.Count)] : null;
+            List<Character> opponents = characters.Where(character => character.IsAlive() && character.GetType() != GetType()).ToList();
+            Opponent =  opponents.Count > 0 ? opponents[Dice.Instance.Throw(0, opponents.Count)] : null;
         }
     }
 }

@@ -2,7 +2,7 @@
 {
     public enum EscapeEnum
     {
-        DontHaveValues = 0,
+        Cant = 0,
         Escaped = 1,
         Tried = 2
     }

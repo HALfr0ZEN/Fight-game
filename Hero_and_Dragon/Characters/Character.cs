@@ -15,6 +15,7 @@ namespace Hero_and_Dragon.Characters
     internal abstract class Character : IComparable<Character>
     {
         public string Name { get; }
+        public event Action<Character, Character> OpponentChange;
         private int _health;
 
         public int Health
@@ -24,62 +25,79 @@ namespace Hero_and_Dragon.Characters
         }
 
         public int PrevHealth;
-
         protected int MaxHealth;
 
         private bool Escaped { get; set; }
         private int EscapeTime { get; set; }
-        protected int MaxDamage { get; }
-        protected int MaxDefense { get; }
+        protected int Damage { get; }
+        protected int Defense { get; }
         
-        protected internal Fractions Fraction{ get; }
-        protected Character(string name, int health, int maxDamage, int maxDefense, Fractions fraction)
+        private Character _opponent;
+
+        public Character Opponent
+        {
+            get => _opponent;
+            protected set
+            {
+                if (_opponent == value) return;
+                _opponent = value;
+                OpponentChange?.Invoke(this, _opponent);
+            }
+        }
+
+        protected internal Fractions Fraction { get; }
+
+        protected Character(string name, int health, int damage, int defense, Fractions fraction)
         {
             Name = name;
             Health = health;
             PrevHealth = Health;
             MaxHealth = health;
-            MaxDamage = maxDamage;
-            MaxDefense = maxDefense;
+            Damage = damage;
+            Defense = defense;
             Fraction = fraction;
         }
-        
+
         public virtual int Attack(Character enemy)
         {
-            int defense = enemy.Defense();
+            int defense = enemy.Defend();
 
-            int damage = Dice.Instance.Throw(0, MaxDamage);
+            int damage = Dice.Instance.Throw(0, Damage);
 
-            enemy.PrevHealth = enemy.Health; 
+            enemy.PrevHealth = enemy.Health;
             //patch negative numbers 
             if (damage > defense)
                 enemy.Health -= damage - defense;
 
             return damage;
         }
-        
-        public virtual int Defense()
-        {
-            return Dice.Instance.Throw() <= 0.5 ? Dice.Instance.Throw(0, MaxDefense) : 0;
-        }
-        
-        public bool IsAlive()
-        {
-            return Health > 0;
-        }
-        
-        public virtual Character SelectOpponent(List<Character> characters)
-        {
-            List<Character> opponents = characters.Where(character => character.IsAlive() && character != this).ToList();
 
-            return opponents.Count > 0 ? opponents[Dice.Instance.Throw(0, opponents.Count)] : null;
+        public virtual int Defend() => Dice.Instance.Throw() <= 0.5 ? Dice.Instance.Throw(0, Defense) : 0;
+
+        public bool IsAlive() => Health > 0;
+
+        public int CompareTo(Character other) => other == null ? 1 : GetStrength().CompareTo(other.GetStrength());
+
+        public virtual double GetStrength() => 0.3 * Health + 0.4 * Damage + 0.3 * Defense;
+
+        public virtual int GetMaxDefense() => Defense;
+
+        public virtual int GetMaxDamage() => Damage;
+
+        public virtual void SelectOpponent(List<Character> characters)
+        {
+            List<Character> opponents =
+                characters.Where(character => character.IsAlive() && character != this).ToList();
+            
+            Opponent = opponents.Count > 0 ? opponents[Dice.Instance.Throw(0, opponents.Count)] : null;
         }
         
+
         public EscapeEnum Escape()
         {
             if (Health >= MaxHealth * 0.5)
-                return EscapeEnum.DontHaveValues;
-            
+                return EscapeEnum.Cant;
+
             if (EscapeTime == 0)
             {
                 if (!Escaped && Dice.Instance.Throw() <= 0.2)
@@ -88,21 +106,13 @@ namespace Hero_and_Dragon.Characters
                     Health = 0;
                     return EscapeEnum.Escaped;
                 }
+
                 EscapeTime = 2; /*time that character need to wait before new try*/
                 return EscapeEnum.Tried;
             }
+
             --EscapeTime;
-            return EscapeEnum.DontHaveValues;
-        }
-
-        public int CompareTo(Character other)
-        {
-            return other == null ? 1 : GetStrength().CompareTo(other.GetStrength());
-        }
-
-        public virtual double GetStrength()
-        {
-            return 0.3 * Health + 0.4 * MaxDamage + 0.3 * MaxDefense;
+            return EscapeEnum.Cant;
         }
     }
 }

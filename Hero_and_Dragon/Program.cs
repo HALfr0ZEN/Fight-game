@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Channels;
 using Hero_and_Dragon.Characters;
 using Hero_and_Dragon.Enums;
 using Hero_and_Dragon.Items;
@@ -14,106 +13,166 @@ namespace Hero_and_Dragon
         {
             List<Item> dovakhiinItems = new List<Item>()
             {
-                new Sword(10, 2, "MorningStar"),
-                new Shield(40, 2, "MorningShield")
+                new Sword(45, 2, "MorningStar"),
+                new Shield(30, 2, "MorningShield")
             };
 
             List<Character> characters = new List<Character>()
             {
-                new Hero("Geralt", 50, 15, 50, new Sword(20, 2, "Silver sword")),
-                new Warrior("Dovakhiin", 50, 5, 20, dovakhiinItems),
-                new Dragon("Alduin", 60, 40, 80),
-                new Dragon("Smaug", 60, 40, 85)
+                new Hero("Geralt", 60, 15, 20, new Sword(50, 2, "Silver sword")),
+                new Hero("Dovakhiin", 50, 5, 20, dovakhiinItems),
+                new Dragon("Alduin", 70, 40, 60),
+                new Dragon("Ivreirrinth", 70, 40, 60),
+                new Wolf("Wolf1", 20, 18, 10),
+                new Wolf("Wolf2", 20, 18, 10),
+                new Wolf("Wolf3", 20, 18, 10),
+                new Wolf("Wolf4", 20, 18, 10),
+                new Wolf("Wolf5", 20, 18, 10),
             };
+
 
             characters.Sort();
             characters.Reverse();
-            Console.WriteLine($"{"CHARACTER".PadRight(10)}| STRENGTH");
-            characters.ForEach(character => Console.WriteLine($"{character.Name.PadRight(10)}| {character.GetStrength()}"));
-            Console.WriteLine(Environment.NewLine);
+
+            characters.ForEach(character => character.OpponentChange += (attacker, opponent) =>
+            {
+                if (opponent != null)
+                    ConsoleWriter.NewLine($"{attacker.Name} selected new opponent {opponent?.Name}");
+            });
             
+            Dictionary<Character, double> strengths =
+                characters.ToDictionary(character => character, character => character.GetStrength());
+
+
+            ConsoleWriter.NewLine(ConsoleColor.Red, "CHARACTER", "STRENGTH");
+            foreach ((Character character, double strength) in strengths)
+                ConsoleWriter.NewLine(character.Name, $"{strength}");
+
+            ConsoleWriter.NewFilledLine();
+            double avg = strengths.Values.Average();
+
+            ConsoleWriter.NewLine($"Average strength", $"{avg}");
+            ConsoleWriter.NewFilledLine();
+
+            ConsoleWriter.NewLine(ConsoleColor.Blue,"", "Over average", "");
+            foreach ((Character character, double strength) in strengths.Where(character => character.Value > avg))
+                ConsoleWriter.NewLine(character.Name, $"{strength}");
+            ConsoleWriter.NewFilledLine();
+
+
+            var min = strengths.Min(c => c.Value);
+
+            ConsoleWriter.NewLine(ConsoleColor.Blue,"", "Weakest", "");
+            foreach ((Character character, double strength) in strengths)
+            {
+                if (Math.Abs(strength - min) < 0.01)
+                    ConsoleWriter.NewLine(character.Name, $"{min}");
+            }
+
+            ConsoleWriter.NewFilledLine();
+
+            ConsoleWriter.NewLine(ConsoleColor.Blue,"", "Dragons", "");
+            foreach ((Character character, double strength) in strengths.Where(character => character.Key is Dragon))
+                ConsoleWriter.NewLine(character.Name, $"{strength}");
+            ConsoleWriter.NewFilledLine();
+
+
+
+            double maxDmg = characters.Average(character => character.GetMaxDamage()) / 2;
+            double maxDef = characters.Average(character => character.GetMaxDefense()) / 4;
             
+            ConsoleWriter.NewLine(ConsoleColor.Blue,"", $"dmg < {maxDmg}", "");
+            foreach (var character in characters.FindAll(character => character.GetMaxDamage() < maxDmg)) 
+                ConsoleWriter.NewLine(character.Name, $"{character.GetMaxDamage()} dmg");
+            ConsoleWriter.NewFilledLine();
+
             
+            ConsoleWriter.NewLine(ConsoleColor.Blue,"", $"def < {maxDef}", "");
+            foreach (var character in characters.FindAll(character => character.GetMaxDefense() < maxDef)) 
+                ConsoleWriter.NewLine(character.Name, $"{character.GetMaxDefense()} def");
+            ConsoleWriter.NewFilledLine();
+            
+
             for (int i = 1; CanFight(characters); i++)
             {
-                Console.WriteLine("".PadRight(50,'-'));
-                Console.WriteLine($"| ROUND: {i}".PadRight(49) + "|");
-                Console.WriteLine("".PadRight(50,'-'));
+                ConsoleWriter.NewBlankLine();
+                ConsoleWriter.NewBlankLine();
+                ConsoleWriter.NewFilledLine();
+                ConsoleWriter.NewLine(ConsoleColor.Cyan, $"ROUND: {i}");
+                ConsoleWriter.NewFilledLine();
+                ConsoleWriter.NewBlankLine();
+
                 int j = 0;
-                
-                foreach (Character attacker in characters)
+
+                ConsoleWriter.NewFilledLine();
+                foreach (var attacker in characters.Where(attacker => attacker.IsAlive()))
                 {
-                    if (!attacker.IsAlive()) continue;
-                    
-                    Character opponent = attacker.SelectOpponent(characters);
+                    attacker.SelectOpponent(characters);
+                    Character opponent = attacker.Opponent;
 
                     if (opponent == null)
                         break;
-
                     ++j;
                     
-                    Console.WriteLine("-".PadRight(50,'-'));
-                    Console.WriteLine($"| Move: {j}".PadRight(49) + "|");
+                    
+                    ConsoleWriter.NewLine(ConsoleColor.Cyan, "Move", j.ToString());
 
                     switch (attacker.Escape())
                     {
                         case (EscapeEnum.Escaped):
                         {
-                            Console.WriteLine($"| {attacker.Name} escaped...".PadRight(49) + "|");
-                            Console.WriteLine("".PadRight(50,'-'));
-                            
-                            Console.WriteLine(Environment.NewLine);
+                            ConsoleWriter.NewFilledLine();
+                            ConsoleWriter.NewLine(ConsoleColor.Green, $"{attacker.Name} escaped...");
+                            ConsoleWriter.NewFilledLine();
                             continue;
                         }
                         case (EscapeEnum.Tried):
                         {
-                            Console.WriteLine($"| {attacker.Name} tried to escape...".PadRight(49) + "|");
-                            Console.WriteLine("".PadRight(50,'-'));
-                            
-                            Console.WriteLine(Environment.NewLine);
+                            ConsoleWriter.NewFilledLine();
+                            ConsoleWriter.NewLine(ConsoleColor.DarkGray, $"{attacker.Name} tried to escape...");
+                            ConsoleWriter.NewFilledLine();
                             continue;
                         }
+                        case EscapeEnum.Cant:
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
                     }
                     
-                    Console.WriteLine("".PadRight(50,'-'));
-                    Console.Write($"| Attacker: {attacker.Name}".PadRight(24) + "|");
-                    Console.WriteLine($" Opponent: {opponent.Name}".PadRight(24) + "|");
-                    Console.WriteLine("".PadRight(50,'-'));
-                    
+                    ConsoleWriter.NewLine($"{attacker.Name}", "--|>>>>>>>", $"{opponent.Name}");
+
                     int damage = attacker.Attack(opponent);
-                    
-                    Console.WriteLine($"| {attacker.Name} attack is: {damage}".PadRight(49) + "|");
-                    Console.WriteLine($"| {opponent.Name} health: {opponent.PrevHealth} -> {opponent.Health}".PadRight(49) + "|");
-                    Console.WriteLine("".PadRight(50,'-'));
-                    
-                    Console.WriteLine(Environment.NewLine);
+
+                    ConsoleWriter.NewLine($"{attacker.Name} attack is: {damage}");
+                    ConsoleWriter.NewLine(opponent.Health == 0 ? ConsoleColor.Red : default,
+                        $"{opponent.Name} health: {opponent.PrevHealth} -> {opponent.Health}");
+                    ConsoleWriter.NewFilledLine();
                 }
             }
 
-            Console.WriteLine("Winners!" + Environment.NewLine + "¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤");
+
+            ConsoleWriter.NewBlankLine();
+            ConsoleWriter.NewLine("WINNERS!");
+            ConsoleWriter.NewFilledLine();
 
             foreach (var character in characters)
             {
                 if (character.IsAlive())
-                {
-                    Console.WriteLine(character.Name);
-                }
+                    ConsoleWriter.NewLine(character.Name);
             }
 
-            Console.WriteLine("¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤");
+
+            Console.ReadKey();
         }
-        
+
         // if more than 1 fraction is capable of fighting return true
 
         private static bool CanFight(List<Character> characters)
         {
-
             List<int> countAlive = new List<int>();
-            
+
             for (int i = 0; i < 4; i++)
-            {
                 countAlive.Add(characters.FindAll(character => (int) character.Fraction == i && character.IsAlive()).Count > 0 ? 1 : 0);
-            }
 
             return countAlive.Sum() > 1;
         }
