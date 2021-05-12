@@ -93,7 +93,7 @@ namespace Hero_and_Dragon
             ConsoleWriter.NewFilledLine();
             
 
-            for (int i = 1; CanFight(characters); i++)
+            for (int i = 1; Character.CanFight(characters); i++)
             {
                 ConsoleWriter.NewBlankLine();
                 ConsoleWriter.NewBlankLine();
@@ -160,21 +160,8 @@ namespace Hero_and_Dragon
                 if (character.IsAlive())
                     ConsoleWriter.NewLine(character.Name);
             }
-
-
+            
             Console.ReadKey();
-        }
-
-        // if more than 1 fraction is capable of fighting return true
-
-        private static bool CanFight(List<Character> characters)
-        {
-            List<int> countAlive = new List<int>();
-
-            for (int i = 0; i < 4; i++)
-                countAlive.Add(characters.FindAll(character => (int) character.Fraction == i && character.IsAlive()).Count > 0 ? 1 : 0);
-
-            return countAlive.Sum() > 1;
         }
     }
 }

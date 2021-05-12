@@ -25,13 +25,13 @@ namespace Hero_and_Dragon.Characters
         }
 
         public int PrevHealth;
-        protected int MaxHealth;
+        protected readonly int MaxHealth;
 
         private bool Escaped { get; set; }
         private int EscapeTime { get; set; }
         protected int Damage { get; }
         protected int Defense { get; }
-        
+
         private Character _opponent;
 
         public Character Opponent
@@ -88,10 +88,10 @@ namespace Hero_and_Dragon.Characters
         {
             List<Character> opponents =
                 characters.Where(character => character.IsAlive() && character != this).ToList();
-            
+
             Opponent = opponents.Count > 0 ? opponents[Dice.Instance.Throw(0, opponents.Count)] : null;
         }
-        
+
 
         public EscapeEnum Escape()
         {
@@ -113,6 +113,16 @@ namespace Hero_and_Dragon.Characters
 
             --EscapeTime;
             return EscapeEnum.Cant;
+        }
+        
+        public static bool CanFight(List<Character> characters)
+        {
+            List<int> countAlive = new List<int>();
+
+            for (int i = 0; i < 4; i++)
+                countAlive.Add(characters.FindAll(character => (int) character.Fraction == i && character.IsAlive()).Count > 0 ? 1 : 0);
+
+            return countAlive.Sum() > 1;
         }
     }
 }
