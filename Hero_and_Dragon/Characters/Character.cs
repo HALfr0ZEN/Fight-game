@@ -31,6 +31,10 @@ namespace Hero_and_Dragon.Characters
 
         private Character _opponent;
 
+        /// <summary>
+        /// Get for this property will return _opponent value
+        /// Set for this property will set _opponent to value and invoke Action event or return if value is the same as _opponent
+        /// </summary>
         public Character Opponent
         {
             get => _opponent;
@@ -106,7 +110,7 @@ namespace Hero_and_Dragon.Characters
         /// Gets strength from evenly distributed average (.3 health, .4 damage, .3 defense)
         /// </summary>
         /// <returns>strength of character</returns>
-        public virtual double GetStrength() => 0.3 * Health + 0.4 * Damage + 0.3 * Defense;
+        public double GetStrength() => 0.3 * Health + 0.4 * GetMaxDamage() + 0.3 * GetMaxDefense();
 
         /// <summary>
         /// Gets max defense that character can provide
@@ -159,10 +163,10 @@ namespace Hero_and_Dragon.Characters
         }
 
         /// <summary>
-        /// Find all characters whose can fight (are alive and are not the same fraction as this ?)
+        /// Find all characters that can fight (are alive and are not the same fraction as this)
         /// </summary>
         /// <param name="characters"></param>
-        /// <returns>1 if number of CanFight is grater than 1 return true else false</returns>
+        /// <returns>if number of characters that can fight is grater than 1 than true else false</returns>
         public static bool CanFight(List<Character> characters)
         {
             List<int> countAlive = new List<int>();

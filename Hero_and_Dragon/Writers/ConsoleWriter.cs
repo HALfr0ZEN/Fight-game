@@ -2,7 +2,7 @@
 
 namespace Hero_and_Dragon.Writers
 {
-    class ConsoleWriter : IWriter
+    internal class ConsoleWriter : IWriter
     {
         public char LineFilling { get; set; } = '-';
         public char LineEnds { get; set; } = '|';
@@ -23,28 +23,29 @@ namespace Hero_and_Dragon.Writers
         }
 
         public static ConsoleWriter Instance { get; } = new ConsoleWriter();
+
         private ConsoleWriter()
         {
         }
 
         public void NewLine(params string[] cols)
         {
-            int width = (LineLenght - 2)/ cols.Length;
+            int width = (LineLenght - 2) / cols.Length;
             string row = LineEnds.ToString();
-            
+
             foreach (var col in cols)
                 row += TextToRow(col, width);
-            
+
             Console.WriteLine(row + LineEnds);
             Color = DefaultColor;
         }
 
         public void NewLine(string col)
         {
-            Console.WriteLine(LineEnds+ " " + col.PadRight(_lineLenght - 3) + LineEnds);
+            Console.WriteLine(LineEnds + " " + col.PadRight(_lineLenght - 3) + LineEnds);
             Color = DefaultColor;
         }
-        
+
         public void NewFilledLine()
         {
             Console.WriteLine("".PadRight(_lineLenght, LineFilling));
@@ -62,7 +63,7 @@ namespace Hero_and_Dragon.Writers
 
             if (text.Length > width)
                 text = text[..(width - 3)] + "...";
-            
+
             if (string.IsNullOrEmpty(text))
                 return new string(' ', width);
 

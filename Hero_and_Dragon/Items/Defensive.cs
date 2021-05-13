@@ -9,9 +9,10 @@
             Defense = defense;
         }
 
-        protected override double GetComparatorValue()
-        {
-            return Defense;
-        }
+        /// <summary>
+        /// Comparator value as defense
+        /// </summary>
+        /// <returns>Defense</returns>
+        protected override double GetComparatorValue() => Defense;
     }
 }

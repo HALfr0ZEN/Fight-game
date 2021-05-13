@@ -11,9 +11,10 @@ namespace Hero_and_Dragon.Items
             Damage = damage;
         }
         
-        protected override double GetComparatorValue()
-        {
-            return Damage;
-        }
+        /// <summary>
+        /// Comparator value as damage
+        /// </summary>
+        /// <returns>Damage</returns>
+        protected override double GetComparatorValue() => Damage;
     }
 }

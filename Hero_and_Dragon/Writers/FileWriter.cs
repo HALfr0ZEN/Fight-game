@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Hero_and_Dragon.Writers
 {
-    class FileWriter : IWriter
+    internal class FileWriter : IWriter
     {
         public char LineFilling { get; set; } = '-';
         public char LineEnds { get; set; } = '|';
@@ -25,8 +25,11 @@ namespace Hero_and_Dragon.Writers
             string end = path.Substring(path.IndexOf('.'));
             path = path.Substring(0, path.IndexOf('.'));
             int i;
-            for (i = 1; File.Exists(path+i+end); i++){}
-            _path = path +i+ end;
+            for (i = 1; File.Exists(path + i + end); i++)
+            {
+            }
+
+            _path = path + i + end;
         }
 
         public static FileWriter Instance(string path) => _instance ??= new FileWriter(path);
@@ -54,7 +57,7 @@ namespace Hero_and_Dragon.Writers
             File.AppendAllText(_path, "".PadRight(_lineLenght, LineFilling));
             NewBlankLine();
         }
-        
+
         public void NewBlankLine() => File.AppendAllText(_path, Environment.NewLine);
 
         private string TextToRow(string text, int width)

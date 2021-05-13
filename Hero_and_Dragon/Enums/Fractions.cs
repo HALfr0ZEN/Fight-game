@@ -1,8 +1,8 @@
 ﻿namespace Hero_and_Dragon.Enums
 {
-    /*
-     * Fractions that defines characters teams
-     */
+    /// <summary>
+    /// Fractions of characters in which they are divided
+    /// </summary>
     public enum Fractions
     {
         People,

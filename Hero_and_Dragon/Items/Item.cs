@@ -13,14 +13,18 @@ namespace Hero_and_Dragon.Items
             Name = name;
         }
 
-        public int CompareTo(Item other)
-        {
-            return other == null ? 1 : GetComparatorValue().CompareTo(other.GetComparatorValue());
-        }
+        /// <summary>
+        /// Implementation of IComparable
+        /// </summary>
+        /// <param name="other">Other item</param>
+        /// <returns>1 if other is null else CompareTo value</returns>
+        public int CompareTo(Item other) =>
+            other == null ? 1 : GetComparatorValue().CompareTo(other.GetComparatorValue());
 
-        protected virtual double GetComparatorValue()
-        {
-            return Weight;
-        }
+        /// <summary>
+        /// Abstract method which should be implemented in all of child classes
+        /// </summary>
+        /// <returns>Double precision value</returns>
+        protected abstract double GetComparatorValue();
     }
 }
