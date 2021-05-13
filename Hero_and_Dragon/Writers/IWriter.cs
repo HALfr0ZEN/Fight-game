@@ -5,7 +5,7 @@
     /// </summary>
     public interface IWriter
     {
-        public char LineFilling { get; set; }
+        char LineFilling { get; set; }
 
         /// <summary>
         /// This method should define/create new line from col given

@@ -19,7 +19,7 @@ namespace Hero_and_Dragon.Writers
         public int LineLenght
         {
             get => _lineLenght;
-            set => _lineLenght = value > 0 ? value : 1;
+            set => _lineLenght = value > 1 ? value : 2;
         }
 
         public static ConsoleWriter Instance { get; } = new ConsoleWriter();
@@ -30,11 +30,11 @@ namespace Hero_and_Dragon.Writers
 
         public void NewLine(params string[] cols)
         {
-            int width = (LineLenght - 2) / cols.Length;
+            int width = (_lineLenght - 2) / cols.Length;
             string row = LineEnds.ToString();
 
             foreach (var col in cols)
-                row += TextToRow(col, width);
+                row += Center(col, width).PadLeft(width);
 
             Console.WriteLine(row + LineEnds);
             Color = DefaultColor;
@@ -57,17 +57,15 @@ namespace Hero_and_Dragon.Writers
             Console.Write(Environment.NewLine);
         }
 
-        private string TextToRow(string text, int width)
+        private string Center(string text, int width)
         {
-            text = text.Length > width ? text[..(width - 3)] + "..." : text;
-
             if (text.Length > width)
                 text = text[..(width - 3)] + "...";
 
             if (string.IsNullOrEmpty(text))
                 return new string(' ', width);
 
-            return text.PadRight(width - (width - text.Length) / 2).PadLeft(width);
+            return text.PadRight(width - (width - text.Length) / 2);
         }
     }
 }

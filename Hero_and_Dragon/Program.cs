@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using Hero_and_Dragon.Characters;
 using Hero_and_Dragon.Enums;
@@ -11,12 +10,11 @@ namespace Hero_and_Dragon
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            
             IWriter writer = ConsoleWriter.Instance;
             ConsoleWriter wr = writer as ConsoleWriter;
-            
+
             List<Item> dovakhiinItems = new List<Item>()
             {
                 new Sword(45, 2, "MorningStar"),
@@ -48,11 +46,11 @@ namespace Hero_and_Dragon
 
             Dictionary<Character, double> strengths =
                 characters.ToDictionary(character => character, character => character.GetStrength());
-            
-            
+
+
             if (wr != null)
                 wr.Color = ConsoleColor.Red;
-            writer.NewLine( "CHARACTER", "STRENGTH"); //red
+            writer.NewLine("CHARACTER", "STRENGTH");
 
             foreach ((Character character, double strength) in strengths)
                 writer.NewLine(character.Name, $"{strength}");
@@ -63,22 +61,22 @@ namespace Hero_and_Dragon
             writer.NewLine($"Average strength", $"{avg}");
             writer.NewFilledLine();
 
-            
+
             if (wr != null)
                 wr.Color = ConsoleColor.Blue;
-            writer.NewLine( "", "Over average", ""); //blue
-            
+            writer.NewLine("", "Over average", "");
+
             foreach ((Character character, double strength) in strengths.Where(character => character.Value > avg))
                 writer.NewLine(character.Name, $"{strength}");
             writer.NewFilledLine();
-            
+
             var min = strengths.Min(c => c.Value);
 
             if (wr != null)
                 wr.Color = ConsoleColor.Blue;
-            
-            writer.NewLine( "", "Weakest", ""); 
-            
+
+            writer.NewLine("", "Weakest", "");
+
             foreach ((Character character, double strength) in strengths)
             {
                 if (Math.Abs(strength - min) < 0.01)
@@ -89,8 +87,9 @@ namespace Hero_and_Dragon
 
             if (wr != null)
                 wr.Color = ConsoleColor.Blue;
+            writer.NewLine("", "Dragons", "");
             
-            writer.NewLine( "", "Dragons", ""); //blue
+            
             foreach ((Character character, double strength) in strengths.Where(character => character.Key is Dragon))
                 writer.NewLine(character.Name, $"{strength}");
             writer.NewFilledLine();
@@ -99,21 +98,22 @@ namespace Hero_and_Dragon
             double maxDmg = characters.Average(character => character.GetMaxDamage()) / 2;
             double maxDef = characters.Average(character => character.GetMaxDefense()) / 4;
 
+            
             if (wr != null)
                 wr.Color = ConsoleColor.Blue;
             writer.NewLine("", $"dmg < {maxDmg}", "");
             foreach (var character in characters.FindAll(character => character.GetMaxDamage() < maxDmg))
                 writer.NewLine(character.Name, $"{character.GetMaxDamage()} dmg");
             writer.NewFilledLine();
-
-
+            
+            
             if (wr != null)
                 wr.Color = ConsoleColor.Blue;
-            writer.NewLine( "", $"def < {maxDef}", "");
+            writer.NewLine("", $"def < {maxDef}", "");
             foreach (var character in characters.FindAll(character => character.GetMaxDefense() < maxDef))
                 writer.NewLine(character.Name, $"{character.GetMaxDefense()} def");
             writer.NewFilledLine();
-
+            
 
             for (int i = 1; Character.CanFight(characters); i++)
             {
@@ -121,7 +121,7 @@ namespace Hero_and_Dragon
                 writer.NewBlankLine();
                 writer.NewFilledLine();
                 if (wr != null) wr.Color = ConsoleColor.Cyan;
-                writer.NewLine( $"ROUND: {i}"); //cyan
+                writer.NewLine($"ROUND: {i}");
                 writer.NewFilledLine();
                 writer.NewBlankLine();
 
@@ -130,16 +130,17 @@ namespace Hero_and_Dragon
                 writer.NewFilledLine();
                 foreach (var attacker in characters.Where(attacker => attacker.IsAlive()))
                 {
+                    if (wr != null)
+                        wr.Color = ConsoleColor.Cyan;
+                    writer.NewLine("Move", j.ToString());
+
+
                     attacker.SelectOpponent(characters);
                     Character opponent = attacker.Opponent;
 
                     if (opponent == null)
                         break;
                     ++j;
-                    
-                    if (wr != null)
-                        wr.Color = ConsoleColor.Cyan;
-                    writer.NewLine( "Move", j.ToString()); //cyan
 
                     switch (attacker.Escape())
                     {
@@ -147,7 +148,7 @@ namespace Hero_and_Dragon
                         {
                             writer.NewFilledLine();
                             if (wr != null) wr.Color = ConsoleColor.Green;
-                            writer.NewLine( $"{attacker.Name} escaped..."); //green
+                            writer.NewLine($"{attacker.Name} escaped...");
                             writer.NewFilledLine();
                             continue;
                         }
@@ -155,7 +156,7 @@ namespace Hero_and_Dragon
                         {
                             writer.NewFilledLine();
                             if (wr != null) wr.Color = ConsoleColor.DarkGray;
-                            writer.NewLine($"{attacker.Name} tried to escape...");//DarkGray
+                            writer.NewLine($"{attacker.Name} tried to escape...");
                             writer.NewFilledLine();
                             continue;
                         }
@@ -187,7 +188,7 @@ namespace Hero_and_Dragon
                     writer.NewLine(character.Name);
             }
 
-            if(wr!=null) Console.ReadKey();
+            if (wr != null) Console.ReadKey();
         }
     }
 }

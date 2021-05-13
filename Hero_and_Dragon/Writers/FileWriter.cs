@@ -22,8 +22,8 @@ namespace Hero_and_Dragon.Writers
 
         private FileWriter(string path)
         {
-            string end = path.Substring(path.IndexOf('.'));
-            path = path.Substring(0, path.IndexOf('.'));
+            string end = path[path.IndexOf('.')..];
+            path = path[..path.IndexOf('.')];
             int i;
             for (i = 1; File.Exists(path + i + end); i++)
             {
@@ -36,7 +36,7 @@ namespace Hero_and_Dragon.Writers
 
         public void NewLine(params string[] cols)
         {
-            int width = (LineLenght - 2) / cols.Length;
+            int width = (_lineLenght - 2) / cols.Length;
             string row = LineEnds.ToString();
 
             foreach (var col in cols)
@@ -62,8 +62,6 @@ namespace Hero_and_Dragon.Writers
 
         private string TextToRow(string text, int width)
         {
-            text = text.Length > width ? text[..(width - 3)] + "..." : text;
-
             if (text.Length > width)
                 text = text[..(width - 3)] + "...";
 
